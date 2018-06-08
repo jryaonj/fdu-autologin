@@ -18,6 +18,7 @@ def get_host_ip(remote_server_ip):
 
 # 202.120.224.115	www.fudan.edu.cn
 remote_server_ip = '202.120.224.115'
+## base64 encoder
 ## username = base64.b64encode(USERNAME)
 ## password = base64.b64encode(PASSWORD)
 username = 'USERNAME'
@@ -25,8 +26,9 @@ password = 'PASSWORD'
 time_int = 3
 
 if __name__ == '__main__':
-    username = base64.b64decode(username)
-    password = base64.b64decode(password)
+    # base64 decoder
+    # username = base64.b64decode(username)
+    # password = base64.b64decode(password)
     ip = get_host_ip(remote_server_ip)
     while 1:
         with open(os.devnull, 'w')  as FNULL:
