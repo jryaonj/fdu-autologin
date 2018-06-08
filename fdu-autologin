@@ -1,0 +1,39 @@
+#!/usr/bin/python
+import os
+import time
+import base64
+import socket
+import shlex, subprocess
+
+# determine current ip
+def get_host_ip(remote_server_ip):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect((remote_server_ip, 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+
+    return ip
+
+# 202.120.224.115	www.fudan.edu.cn
+remote_server_ip = '202.120.224.115'
+## username = base64.b64encode(USERNAME)
+## password = base64.b64encode(PASSWORD)
+username = 'USERNAME'
+password = 'PASSWORD'
+time_int = 3
+
+if __name__ == '__main__':
+    username = base64.b64decode(username)
+    password = base64.b64decode(password)
+    ip = get_host_ip(remote_server_ip)
+    while 1:
+        with open(os.devnull, 'w')  as FNULL:
+            cmd = 'ping www.baidu.com -w 2 -c 1'
+            result = subprocess.Popen(shlex.split(cmd),stdout = FNULL)
+            result.wait()
+        if result.poll() != 0:
+            print(time.ctime(time.time()) + '\toffline, try login')
+            os.system('curl %s --insecure --data "action=login&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
+        time.sleep(time_int)

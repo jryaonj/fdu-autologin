@@ -1,0 +1,14 @@
+[Unit]
+Description=FDU Login daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/autologin
+ExecReload=/bin/kill -HUP $MAINPID
+Type=simple
+KillMode=process
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
