@@ -36,9 +36,18 @@ if __name__ == '__main__':
             result = subprocess.Popen(shlex.split(cmd),stdout = FNULL)
             result.wait()
         if result.poll() != 0:
-            print(time.ctime(time.time()) + '\toffline, try login')
-            # clean previous login status
+            ss += 1
+            print(time.ctime(time.time()) + '\toffline, counting %d' %ss)
+        if ss >= 3:
+            print(time.ctime(time.time()) + '\toffline, counting for 3-times , try login')
+            ss = 0
+            # ensure no existed login status
+            print('curl %s --insecure --data "action=logout&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
             os.system('curl %s --insecure --data "action=logout&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
-            # clean login
+            time.sleep(time_int * 2)
+            # re-assure login
+            print('curl %s --insecure --data "action=login&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
+            os.system('curl %s --insecure --data "action=login&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
+            time.sleep(time_int * 2)
             os.system('curl %s --insecure --data "action=login&username=%s&password=%s&ac_id=1&user_ip=%s&nas_ip=&user_mac=&save_me=1&ajax=1" > /dev/null 2>&1' %(URL , username , password , ip ))
         time.sleep(time_int)
